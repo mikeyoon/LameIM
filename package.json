@@ -1,11 +1,11 @@
 {
-    "name" : "ExpressTest",
-    "description" : "(pending)",
+    "name" : "LameIM",
+    "description" : "Sample IM Application",
     "version" : "0.1",
     "main" : "app.js",
     "author" : {
-        "name" : "mike",
-        "email" : ""
+        "name" : "Mike Yoon",
+        "email" : "mike@yaki.org"
     },
     "keywords" : 
         [

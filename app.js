@@ -3,8 +3,6 @@
  * and open the template in the editor.
  */
 
-require.paths.push('/usr/lib/node_modules');
-
 var express = require('express');
 var jade = require('jade');
 var RedisStore = require('connect-redis')(express);
