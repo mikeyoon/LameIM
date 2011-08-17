@@ -1,0 +1,24 @@
+script(type="text/javascript")
+    $(document).ready(function() {
+        var socket = io.connect('http://localhost');
+
+        socket.on('chat', function(data) {
+            $("#chatwindow").html(data.from + ": " + data.message);
+        });
+
+        $('#button-send').click(function () {
+            socket.emit('message', { to: $('#to').val(), message: $('#message-box').val() });
+        });
+    });
+
+p username
+p(id='chatwindow')
+p
+    input#to
+p
+    input(id="message-box")
+p
+    input(type="button", id="button-send", value="send")
+
+p
+    a(href="/logout") logout

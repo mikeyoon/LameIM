@@ -1,0 +1,20 @@
+{
+    "name" : "ExpressTest",
+    "description" : "(pending)",
+    "version" : "0.1",
+    "main" : "app.js",
+    "author" : {
+        "name" : "mike",
+        "email" : ""
+    },
+    "keywords" : 
+        [
+            ""
+        ],
+    "licenses" : {
+        "type" : "none"
+    },
+    "bugs" : {
+        "web" : "null"
+    }
+}

@@ -1,0 +1,37 @@
+script(type="text/javascript")
+    $(document).ready(function() {
+        $('#submit-login').click(function() {
+            var username = $('#username').val();
+            var password = $('#password').val();
+
+            $('#errors').html('');
+            var errors = false;
+
+            if (username == '')
+            {
+                $('#errors').append("Please enter your username<br/>");
+                errors = true;
+            }
+            if (password == '')
+            {
+                $('#errors').append("Please enter your password");
+                errors = true;
+            }
+
+            return !errors;
+        });
+
+        $('#button-register').click(function() {
+            window.location = '/register';
+        });
+    });
+
+p Login
+form(method='post', action='login')
+    p#errors.err
+    p Username:
+        input#username(name='login[username]')
+    p Password:
+        input#password(name='login[password]')
+    input#submit-login(type="submit", name="login", value="Login")
+    input#button-register(type="button", name="register", value="Register")
