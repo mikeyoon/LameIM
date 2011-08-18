@@ -10,15 +10,16 @@ var mongoose = require('mongoose')
 
 var User = new Schema();
 
+//Todo hash me!!
 User.add({
-    username: { type: String, index: true }
+    firstName: String
+    , lastName: String
+    , username: { type: String, index: { unique: true } }
     , password: String
+    , email: String
     , createDate: { type: Date, default: Date.now }
 });
 
-User.path('username')
-.default(function() {
-    return new
-})
+mongoose.connect('mongodb://localhost/db');
 
-mongoose.model('User', User);
+module.exports.User = mongoose.model('User', User);

@@ -17,6 +17,12 @@ var app = express.createServer(
 require('./mvc').boot(app);
 require('./sockets').boot(app, sessionStore);
 
+
+
+
+//asdf.save();
+
+
 app.listen(3000);
 
 console.log('Express app started on port 3000');

@@ -1,10 +1,24 @@
-p Signup
-div.signup-field
-    label username
-    input.required(type="text", name="user[firstname]")
+form(method="post")
 
-div.signup-field
-    label password
-    input.required(type="password", name="user[password]")
+    p Signup
+    div.signup-field
+        label username
+        input.required(type="text", name="user[username]")
 
-input#button-signup(type="button", value="Signup")
+    div.signup-field
+        label password
+        input.required(type="password", name="user[password]")
+
+    div.signup-field
+        label firstname
+        input.required(type="text", name="user[firstName]")
+
+    div.signup-field
+        label lastname
+        input.required(type="text", name="user[lastName]")
+
+    div.signup-field
+        label email
+        input.required(type="text", name="user[email]")
+
+    input#button-signup(type="submit", value="Signup")

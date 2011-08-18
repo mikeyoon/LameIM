@@ -66,8 +66,13 @@ function bootControllers(app) {
             controllerActions['app']['register'](req, res);
         });
 
+        app.post('/register', function(req, res) {
+            controllerActions['app']['newUser'](req, res);
+        })
+
         //Security check
         app.all('*', function(req, res, next) {
+            console.log('1: ' + req.session.user);
             if (!req.session.user || !req.session.user.username)
                 res.redirect('/');
             else
