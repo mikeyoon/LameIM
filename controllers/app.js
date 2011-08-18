@@ -31,14 +31,13 @@ module.exports = {
     newUser: function(req, res) {
         var user = req.body.user;
 
-        console.log(user);
-
         var newUser = new User();
         newUser.username = user.username;
         newUser.password = user.password;
         newUser.firstName = user.firstName;
         newUser.lastName = user.lastName;
         newUser.email = user.email;
+        
         newUser.save(function(err, data) {
             req.session.user = data;
             res.redirect('/home/index')

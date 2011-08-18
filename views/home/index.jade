@@ -3,15 +3,15 @@ script(type="text/javascript")
         var socket = io.connect('');
 
         socket.on('chat', function(data) {
-            $("#chatwindow").html(data.from + ": " + data.message);
+            $("#chatwindow").append('<strong>' + data.from + "</strong>: " + data.message + '<br />');
         });
 
         $('#button-send').click(function () {
+            $("#chatwindow").append('<strong>me</strong>: ' + $('#message-box').val() + '<br />');
             socket.emit('message', { to: $('#to').val(), message: $('#message-box').val() });
         });
     });
 
-p username
 p(id='chatwindow')
 p
     input#to
