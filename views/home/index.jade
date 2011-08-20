@@ -12,10 +12,21 @@ script(type="text/javascript")
         });
     });
 
+div#buddies
+    select#select-buddy(name="buddylist")
+    - each buddy in buddies
+        option!=buddy
+
 p(id='chatwindow')
-p
+    - each message in recent
+      strong
+          !=message.from
+          |:
+      !=message.message
+      br
+p To: 
     input#to
-p
+p Message:
     input(id="message-box")
 p
     input(type="button", id="button-send", value="send")

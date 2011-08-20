@@ -72,10 +72,13 @@ function bootControllers(app) {
 
         //Security check
         app.all('*', function(req, res, next) {
-            if (!req.session.user || !req.session.user.username)
+            if (!req.session || !req.session.user || !req.session.user.username)
                 res.redirect('/');
             else
+            {
+                console.log('found user session ' + req.session.user);
                 next();
+            }
         });
 
         //Default route

@@ -1,4 +1,11 @@
-var User = require('../models/user').User;
+//var User = require('../models/user').User;
+
+var Mongolian = require('mongolian');
+var server = new Mongolian();
+var db = server.db('db');
+
+var users = db.collection('users');
+var messages = db.collection('messages');
 
 module.exports = {
 
@@ -11,7 +18,7 @@ module.exports = {
 
         console.log('username: ' + login.username + ' password: ' + login.password);
 
-        User.findOne({ username: login.username, password: login.password }, function(err, user) {
+        users.findOne({ username: login.username, password: login.password }, function(err, user) {
             console.log('found ' + login.username);
 
             req.session.user = user;
@@ -31,16 +38,17 @@ module.exports = {
     newUser: function(req, res) {
         var user = req.body.user;
 
-        var newUser = new User();
-        newUser.username = user.username;
-        newUser.password = user.password;
-        newUser.firstName = user.firstName;
-        newUser.lastName = user.lastName;
-        newUser.email = user.email;
-        
-        newUser.save(function(err, data) {
+        var newUser = {
+            username: user.username,
+            password: user.password,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email
+        };
+
+        users.save(newUser, function(err, data) {
             req.session.user = data;
-            res.redirect('/home/index')
+            res.redirect('/home/index');
         });
     }
 };

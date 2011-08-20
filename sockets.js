@@ -8,6 +8,13 @@
 var connect = require('connect');
 var io = require('socket.io');
 
+var Mongolian = require('mongolian');
+var server = new Mongolian();
+var db = server.db('db');
+
+var users = db.collection('users');
+var messages = db.collection('messages');
+
 exports.boot = function(app, sessionStore)
 {
     var sio = io.listen(app);
@@ -40,7 +47,15 @@ exports.boot = function(app, sessionStore)
                     console.log('data: ' + data);
 
                     if (connections[data.to])
+                    {
+                        messages.insert({
+                            from: session.user.username,
+                            to: data.to,
+                            message: data.message
+                        });
+
                         connections[data.to].emit('chat', { from: session.user.username, message: data.message });
+                    }
                     else
                         socket.emit('chat', { from: 'system', message: 'user does not exist'});
                 });
