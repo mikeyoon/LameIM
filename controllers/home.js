@@ -13,37 +13,50 @@ var messages = db.collection('messages');
 
 module.exports = {
     index: function (req, res) {
-        console.log("called home/index");
-        
         var results = messages.find({ $or: [ { from: req.session.user.username }, { to: req.session.user.username } ] }).sort({ createDate: 1 }).limit(10);
 
         results.toArray(function(err, data) {
-            console.log(data);
+            console.log(data.buddies)
             req.session.recent = data;
-            res.render(req.params.controller + '/' + req.params.action, { recent: data });
+            data = data ? data : [ ];
+            var buddyList = req.session.user.buddies ? req.session.user.buddies : [ ];
+            res.render(req.params.controller + '/' + req.params.action, { recent: data, buddies: buddyList });
         });
-    
     },
 
     addBuddy: function (req, res) {
-        users.findOne({ username: req.params.id }, function(err, data) {
+        users.findOne({ username: req.session.user.username }, function(err, data) {
+            console.log(data);
             if (data)
             {
                 var buddies = data.buddies;
                 if (!buddies)
                 {
+                    console.log('new buddy list');
                     data.buddies = new Array(req.params.id);
+
+                    users.save(data, function(err, obj) {
+                        req.session.user = data;
+                        res.send({
+                            success: true
+                        });
+                    });
                 }
                 else
                 {
-                    buddies.push(req.params.id);
-                }
+                    if (buddies.indexOf(req.params.id) == -1)
+                    {
+                        console.log('added buddy');
+                        buddies.push(req.params.id);
 
-                users.save(data);
-                added = true;
-                res.send({
-                    success: true
-                });
+                        users.save(data, function(err, obj) {
+                            req.session.user = data;
+                            res.send({
+                                success: true
+                            });
+                        });
+                    }
+                }
             }
             else
             {
@@ -51,6 +64,14 @@ module.exports = {
                     success: false
                 });
             }
+        });
+    },
+
+    getRecentHistory: function(req, res) {
+        var recent = messages.find({ $or: [ { from: req.params.id }, { to: req.params.id } ] }).sort({ createDate: 1 }).limit(10);
+
+        recent.toArray(function(err, data) {
+            res.send(data);
         });
     }
 };

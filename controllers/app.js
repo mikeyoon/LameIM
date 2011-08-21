@@ -16,8 +16,6 @@ module.exports = {
     login: function(req, res) {
         var login = req.body.login[0];
 
-        console.log('username: ' + login.username + ' password: ' + login.password);
-
         users.findOne({ username: login.username, password: login.password }, function(err, user) {
             console.log('found ' + login.username);
 

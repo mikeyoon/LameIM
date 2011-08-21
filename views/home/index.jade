@@ -8,14 +8,32 @@ script(type="text/javascript")
 
         $('#button-send').click(function () {
             $("#chatwindow").append('<strong>me</strong>: ' + $('#message-box').val() + '<br />');
-            socket.emit('message', { to: $('#to').val(), message: $('#message-box').val() });
+            socket.emit('message', { to: $('#select-buddy').val(), message: $('#message-box').val() });
+        });
+
+        $('#select-buddy').change(function() {
+            $.getJSON('/home/getRecentHistory/' + $(this).val(), function(data) {
+                $('#chatwindow').html('');
+                data.forEach(function(obj) {
+                    $('#chatwindow').append('<strong>' + obj.from + ':</strong> ' + obj.message + '<br />');
+                });
+            });
+        });
+
+        $('#button-add-buddy').click(function() {
+            var buddy = $('#new-buddy').val();
+
+            $.post('/home/addBuddy/' + buddy, function(data) {
+                if (data.success == true)
+                {
+                    alert('hi');
+                    $('#select-buddy').append('<option>' + buddy + '</option>')
+                }
+            });
         });
     });
 
-div#buddies
-    select#select-buddy(name="buddylist")
-    - each buddy in buddies
-        option!=buddy
+
 
 p(id='chatwindow')
     - each message in recent
@@ -24,8 +42,15 @@ p(id='chatwindow')
           |:
       !=message.message
       br
+p Add Buddy: 
+    input#new-buddy
+    input(type="button", id="button-add-buddy", value="Add")
+
 p To: 
-    input#to
+    select#select-buddy(name="buddylist")
+      option
+      - each buddy in buddies
+        option!=buddy
 p Message:
     input(id="message-box")
 p
