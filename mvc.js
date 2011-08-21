@@ -68,7 +68,7 @@ function bootControllers(app) {
 
         app.post('/register', function(req, res) {
             controllerActions['app']['newUser'](req, res);
-        })
+        });
 
         //Security check
         app.all('*', function(req, res, next) {

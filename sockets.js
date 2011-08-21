@@ -70,4 +70,4 @@ exports.boot = function(app, sessionStore)
             }
         });
     });
-}
+};

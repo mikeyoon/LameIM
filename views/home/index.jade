@@ -9,6 +9,7 @@ script(type="text/javascript")
         $('#button-send').click(function () {
             $("#chatwindow").append('<strong>#{username}</strong>: ' + $('#message-box').val() + '<br />');
             socket.emit('message', { to: $('#select-buddy').val(), message: $('#message-box').val() });
+            $('#message-box').val('');
         });
 
         $('#select-buddy').change(function() {
