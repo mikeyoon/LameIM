@@ -1,11 +1,6 @@
 //var User = require('../models/user').User;
 
-var Mongolian = require('mongolian');
-var server = new Mongolian();
-var db = server.db('db');
-
-var users = db.collection('users');
-var messages = db.collection('messages');
+var repo = require('../repository');
 
 module.exports = {
 
@@ -16,7 +11,7 @@ module.exports = {
     login: function(req, res) {
         var login = req.body.login[0];
 
-        users.findOne({ username: login.username, password: login.password }, function(err, user) {
+        repo.users.findOne({ username: login.username, password: login.password }, function(err, user) {
             console.log('found ' + login.username);
 
             req.session.user = user;
@@ -44,7 +39,7 @@ module.exports = {
             email: user.email
         };
 
-        users.save(newUser, function(err, data) {
+        repo.users.save(newUser, function(err, data) {
             req.session.user = data;
             res.redirect('/home/index');
         });
