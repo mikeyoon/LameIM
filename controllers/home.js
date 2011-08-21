@@ -16,17 +16,15 @@ module.exports = {
         var results = messages.find({ $or: [ { from: req.session.user.username }, { to: req.session.user.username } ] }).sort({ createDate: 1 }).limit(10);
 
         results.toArray(function(err, data) {
-            console.log(data.buddies)
             req.session.recent = data;
             data = data ? data : [ ];
             var buddyList = req.session.user.buddies ? req.session.user.buddies : [ ];
-            res.render(req.params.controller + '/' + req.params.action, { recent: data, buddies: buddyList });
+            res.render(req.params.controller + '/' + req.params.action, { username: req.session.user.username, recent: [ ], buddies: buddyList });
         });
     },
 
     addBuddy: function (req, res) {
         users.findOne({ username: req.session.user.username }, function(err, data) {
-            console.log(data);
             if (data)
             {
                 var buddies = data.buddies;

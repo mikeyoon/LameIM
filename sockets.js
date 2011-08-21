@@ -18,6 +18,9 @@ var messages = db.collection('messages');
 exports.boot = function(app, sessionStore)
 {
     var sio = io.listen(app);
+    
+    sio.set('log level', 2);
+
     var connections = { };
     
     sio.set('authorization', function(data, accept) {
@@ -58,7 +61,7 @@ exports.boot = function(app, sessionStore)
                         connections[data.to].emit('chat', { from: session.user.username, message: data.message });
                     }
                     else
-                        socket.emit('chat', { from: 'system', message: 'user does not exist'});
+                        socket.emit('chat', { from: 'system', message: 'user is offline or does not exist'});
                 });
 
                 socket.on('disconnect', function() {

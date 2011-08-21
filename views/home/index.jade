@@ -7,7 +7,7 @@ script(type="text/javascript")
         });
 
         $('#button-send').click(function () {
-            $("#chatwindow").append('<strong>me</strong>: ' + $('#message-box').val() + '<br />');
+            $("#chatwindow").append('<strong>#{username}</strong>: ' + $('#message-box').val() + '<br />');
             socket.emit('message', { to: $('#select-buddy').val(), message: $('#message-box').val() });
         });
 
@@ -26,7 +26,6 @@ script(type="text/javascript")
             $.post('/home/addBuddy/' + buddy, function(data) {
                 if (data.success == true)
                 {
-                    alert('hi');
                     $('#select-buddy').append('<option>' + buddy + '</option>')
                 }
             });
