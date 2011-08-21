@@ -51,7 +51,8 @@ exports.boot = function(app, sessionStore)
                         messages.insert({
                             from: session.user.username,
                             to: data.to,
-                            message: data.message
+                            message: data.message,
+                            createDate: new Date()
                         });
 
                         connections[data.to].emit('chat', { from: session.user.username, message: data.message });
