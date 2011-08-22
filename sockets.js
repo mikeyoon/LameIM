@@ -15,14 +15,14 @@ var db = server.db('db');
 var users = db.collection('users');
 var messages = db.collection('messages');
 
+var connections = { };
+
 exports.boot = function(app, sessionStore)
 {
     var sio = io.listen(app);
-    
+
     sio.set('log level', 2);
 
-    var connections = { };
-    
     sio.set('authorization', function(data, accept) {
         if (data.headers.cookie) {
             data.cookie = connect.utils.parseCookie(data.headers.cookie);
@@ -70,4 +70,9 @@ exports.boot = function(app, sessionStore)
             }
         });
     });
+};
+
+exports.isOnline = function(name)
+{
+    return connections[name] != null;
 };

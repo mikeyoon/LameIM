@@ -6,9 +6,25 @@ script(type="text/javascript")
             $("#chatwindow").append('<strong>' + data.from + "</strong>: " + data.message + '<br />');
         });
 
+        socket.on('buddy-disconnect', function(data) {
+            
+        });
+
+        socket.on('buddy-connect', function(data) {
+
+        });
+
+        socket.on('buddy-away', function(data) {
+
+        });
+
+        socket.on('buddy-return', function(data) {
+
+        });
+
         $('#button-send').click(function () {
             $("#chatwindow").append('<strong>#{username}</strong>: ' + $('#message-box').val() + '<br />');
-            socket.emit('message', { to: $('#select-buddy').val(), message: $('#message-box').val() });
+            socket.emit('message', { to: $('.buddylist .selected').html(), message: $('#message-box').val() });
             $('#message-box').val('');
         });
 
@@ -31,9 +47,21 @@ script(type="text/javascript")
                 }
             });
         });
+
+        $('.list div').click(function() {
+            $('.list div').removeClass('selected');
+            $(this).addClass('selected');
+        });
+
+        $('.list div').dblclick(function() {
+            $.getJSON('/home/getRecentHistory/' + $(this).html(), function(data) {
+                $('#chatwindow').html('');
+                data.forEach(function(obj) {
+                    $('#chatwindow').append('<strong>' + obj.from + ':</strong> ' + obj.message + '<br />');
+                });
+            });
+        });
     });
-
-
 
 p(id='chatwindow')
     - each message in recent
@@ -46,11 +74,7 @@ p Add Buddy:
     input#new-buddy
     input(type="button", id="button-add-buddy", value="Add")
 
-p To: 
-    select#select-buddy(name="buddylist")
-      option
-      - each buddy in buddies
-        option!=buddy
+
 p Message:
     input(id="message-box")
 p
@@ -58,3 +82,12 @@ p
 
 p
     a(href="/logout") logout
+
+div
+    fieldset.buddylist
+        div.online.list online
+            - each buddy in onlineBuddies
+              div!=buddy
+        div.offline.list offline
+            - each buddy in offlineBuddies
+              div!=buddy

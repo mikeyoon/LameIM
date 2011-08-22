@@ -1,0 +1,31 @@
+.selected
+{
+    background-color: navy;
+    color: white;
+}
+
+.online
+{
+    
+}
+
+.online div
+{
+    cursor: pointer;
+}
+
+.offline
+{
+    
+}
+
+.offline div
+{
+    font-style: italic;
+    cursor: pointer;
+}
+
+.buddylist
+{
+    width: 200px;
+}

@@ -17,30 +17,30 @@ function bootApplication(app) {
         app.set('views', __dirname + '/views');
         app.set('views');
         app.set('view engine', 'jade');
+        app.use(express.bodyParser());
+        app.use('/styles', express.static(__dirname + '/styles'));
     });
-
-    app.use(express.bodyParser());
 
     // Some dynamic view helpers
-    app.dynamicHelpers({
-        request: function(req) {
-            return req;
-        },
-
-        hasMessages: function(req) {
-            if (!req.session) return false;
-            return Object.keys(req.session.flash || {}).length;
-        },
-
-        messages: function(req) {
-            return function() {
-                var msgs = req.flash();
-                return Object.keys(msgs).reduce(function(arr, type) {
-                    return arr.concat(msgs[type]);
-                }, []);
-            };
-        }
-    });
+//    app.dynamicHelpers({
+//        request: function(req) {
+//            return req;
+//        },
+//
+//        hasMessages: function(req) {
+//            if (!req.session) return false;
+//            return Object.keys(req.session.flash || {}).length;
+//        },
+//
+//        messages: function(req) {
+//            return function() {
+//                var msgs = req.flash();
+//                return Object.keys(msgs).reduce(function(arr, type) {
+//                    return arr.concat(msgs[type]);
+//                }, []);
+//            };
+//        }
+//    });
 }
 
 function bootControllers(app) {

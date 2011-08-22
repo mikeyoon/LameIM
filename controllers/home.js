@@ -5,6 +5,7 @@
 //var Message = require('../models/user').Messages;
 //var User = require('../models/user').User;
 var repo = require('../repository');
+var sockets = require('../sockets');
 
 module.exports = {
     index: function (req, res) {
@@ -14,7 +15,22 @@ module.exports = {
             req.session.recent = data;
             data = data ? data : [ ];
             var buddyList = req.session.user.buddies ? req.session.user.buddies : [ ];
-            res.render(req.params.controller + '/' + req.params.action, { username: req.session.user.username, recent: [ ], buddies: buddyList });
+            var online = [ ];
+            var offline = [ ];
+            
+            buddyList.forEach(function(buddy) {
+                if (sockets.isOnline(buddy))
+                {
+                    online.push(buddy);
+                }
+                else
+                {
+                    offline.push(buddy);
+                }
+            });
+
+            res.render(req.params.controller + '/' + req.params.action,
+                { username: req.session.user.username, recent: [ ], onlineBuddies: online, offlineBuddies: offline });
         });
     },
 
