@@ -7,11 +7,11 @@ script(type="text/javascript")
         });
 
         socket.on('buddy-disconnect', function(data) {
-            
+            $('#buddy_' + data.username).remove().appendTo($('.offline'));
         });
 
         socket.on('buddy-connect', function(data) {
-
+            $('#buddy_' + data.username).remove().appendTo($('.online'));
         });
 
         socket.on('buddy-away', function(data) {
@@ -48,12 +48,12 @@ script(type="text/javascript")
             });
         });
 
-        $('.list div').click(function() {
+        $('.list div').live('click', function() {
             $('.list div').removeClass('selected');
             $(this).addClass('selected');
         });
 
-        $('.list div').dblclick(function() {
+        $('.list div').live('dblclick', function() {
             $.getJSON('/home/getRecentHistory/' + $(this).html(), function(data) {
                 $('#chatwindow').html('');
                 data.forEach(function(obj) {
@@ -90,4 +90,4 @@ div
               div!=buddy
         div.offline.list offline
             - each buddy in offlineBuddies
-              div!=buddy
+              div(id='buddy_' + buddy) #{buddy}

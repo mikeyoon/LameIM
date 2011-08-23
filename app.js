@@ -9,7 +9,7 @@ var RedisStore = require('connect-redis')(express);
 var sessionStore = new RedisStore();
 
 var app = express.createServer(
-    express.logger(),
+    //express.logger(),
     express.cookieParser(),
     express.session({secret: 'keyboard cat', key: 'express.sid', store: sessionStore })
 );
