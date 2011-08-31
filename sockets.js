@@ -95,6 +95,8 @@ exports.boot = function(app, sessionStore)
 
                 socket.on('disconnect', function() {
                     console.log(self.currentUser + ' socket disconnect');
+                    connections[self.currentUser] = null;
+
                     session.user.buddies.forEach(function(buddy) {
                         multi.hdel("watch " + buddy, self.currentUser);
                     });
@@ -118,5 +120,5 @@ exports.boot = function(app, sessionStore)
 exports.isOnline = function(name)
 {
     console.log('Connection to ' + name + '=' + connections[name]);
-    return connections[name] != null;
+    return connections[name] != null && typeof connections[name] == "object";
 };
