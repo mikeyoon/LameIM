@@ -8,14 +8,10 @@
 var connect = require('connect');
 var io = require('socket.io');
 
-var Mongolian = require('mongolian');
-var server = new Mongolian();
-var db = server.db('db');
+var mongoose = require('mongoose');
+var Message = mongoose.model('Message');
 var redis = require("redis"),
     client = redis.createClient();
-
-var users = db.collection('users');
-var messages = db.collection('messages');
 
 var connections = GLOBAL.connections;
 
@@ -82,14 +78,16 @@ exports.boot = function(app, sessionStore)
 
                     if (connections[data.to])
                     {
-                        messages.insert({
-                            from: self.currentUser,
+                        var newMessage = new Message({
+                            user: self.currentUser,
                             to: data.to,
                             message: data.message,
                             createDate: new Date()
                         });
 
-                        connections[data.to].emit('chat', { from: self.currentUser, message: data.message });
+                        newMessage.save(function(err) {
+                            connections[data.to].emit('chat', { from: self.currentUser, message: data.message });
+                        });
                     }
                     else
                         socket.emit('chat', { from: 'system', message: 'user is offline or does not exist'});

@@ -1,6 +1,7 @@
 //var User = require('../models/user').User;
 
-var repo = require('../repository');
+var mongoose = require('mongoose');
+var User = mongoose.model('User');
 
 module.exports = {
 
@@ -11,7 +12,7 @@ module.exports = {
     login: function(req, res) {
         var login = req.body.login[0];
 
-        repo.users.findOne({ username: login.username, password: login.password }, function(err, user) {
+        User.findOne({ username: login.username, password: login.password }, function(err, user) {
             console.log('found ' + login.username);
 
             req.session.user = user;
@@ -31,15 +32,15 @@ module.exports = {
     newUser: function(req, res) {
         var user = req.body.user;
 
-        var newUser = {
+        var newUser = new User({
             username: user.username,
             password: user.password,
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email
-        };
+        });
 
-        repo.users.save(newUser, function(err, data) {
+        newUser.save(function(err) {
             req.session.user = data;
             res.redirect('/home/index');
         });

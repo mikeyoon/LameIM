@@ -7,6 +7,7 @@ var express = require('express');
 var jade = require('jade');
 var RedisStore = require('connect-redis')(express);
 var sessionStore = new RedisStore();
+var repo = require('./repository');
 
 var app = express.createServer(
     //express.logger(),

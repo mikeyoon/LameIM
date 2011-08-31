@@ -4,14 +4,16 @@
  */
 //var Message = require('../models/user').Messages;
 //var User = require('../models/user').User;
-var repo = require('../repository');
+var mongoose = require('mongoose');
 var sockets = require('../sockets');
+
+var Message = mongoose.model('Message');
 
 module.exports = {
     index: function (req, res) {
-        var results = repo.messages.find({ $or: [ { from: req.session.user.username }, { to: req.session.user.username } ] }).sort({ createDate: 1 }).limit(10);
+        var results = Message.find({ $or: [ { from: req.session.user.username }, { to: req.session.user.username } ] }).sort({ createDate: 1 }).limit(10);
 
-        results.toArray(function(err, data) {
+        results.exec(function(err, data) {
             req.session.recent = data;
             data = data ? data : [ ];
             var buddyList = req.session.user.buddies ? req.session.user.buddies : [ ];
@@ -35,7 +37,7 @@ module.exports = {
     },
 
     addBuddy: function (req, res) {
-        repo.users.findOne({ username: req.session.user.username }, function(err, data) {
+        User.findOne({ username: req.session.user.username }, function(err, data) {
             if (data)
             {
                 var buddies = data.buddies;
@@ -44,7 +46,7 @@ module.exports = {
                     console.log('new buddy list');
                     data.buddies = new Array(req.params.id);
 
-                    repo.users.save(data, function(err, obj) {
+                    data.save(function(err) {
                         req.session.user = data;
                         res.send({
                             success: true
@@ -57,8 +59,7 @@ module.exports = {
                     {
                         console.log('added buddy');
                         buddies.push(req.params.id);
-
-                        repo.users.save(data, function(err, obj) {
+                        data.save(function(err) {
                             req.session.user = data;
                             res.send({
                                 success: true
@@ -77,10 +78,10 @@ module.exports = {
     },
 
     getRecentHistory: function(req, res) {
-        var recent = repo.messages.find({ $or: [ { from: req.params.id }, { to: req.params.id } ] }).sort({ createDate: 1 }).limit(10);
+        var recent = Message.find({ $or: [ { from: req.params.id }, { to: req.params.id } ] }).sort('createDate', 1).limit(10);
 
-        recent.toArray(function(err, data) {
-            res.send(data);
+        recent.exec(function(err, data) {
+            res.send(data.reverse());
         });
     }
 };
