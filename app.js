@@ -3,11 +3,10 @@
  * and open the template in the editor.
  */
 
-var express = require('express');
-var jade = require('jade');
-var RedisStore = require('connect-redis')(express);
-var sessionStore = new RedisStore();
-var repo = require('./repository');
+var express = require('express'),
+    jade = require('jade'),
+    RedisStore = require('connect-redis')(express),
+    sessionStore = new RedisStore();
 
 var app = express.createServer(
     //express.logger(),
@@ -15,6 +14,7 @@ var app = express.createServer(
     express.session({secret: 'keyboard cat', key: 'express.sid', store: sessionStore })
 );
 
+require('./repository').boot('mongodb://localhost/db');
 require('./mvc').boot(app);
 require('./sockets').boot(app, sessionStore);
 

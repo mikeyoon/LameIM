@@ -5,27 +5,13 @@
  * Time: 5:29 PM
  * To change this template use File | Settings | File Templates.
  */
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema
-  , ObjectId = Schema.ObjectId;
+var mongoose = require('mongoose'),
+    User = require('./models/user').Model,
+    Message = require('./models/message').Model;
 
-mongoose.connect('mongodb://localhost/db');
+module.exports.boot = function(url) {
+    mongoose.connect(url);
 
-var User = new Schema({
-    username: { type: String, index: true }
-    , password: String
-    , email: { type: String, index: true }
-    , firstName: String
-    , lastName: String
-    , buddies: Array
-});
-
-var Message = new Schema({
-    user: { type: String, index: true }
-    , to: { type: String, index: true }
-    , message: String
-    , createDate: Date
-});
-
-module.exports.User = mongoose.model('User', User);
-module.exports.Message = mongoose.model('Message', Message);
+    mongoose.model('Message', Message);
+    mongoose.model('User', User);
+};

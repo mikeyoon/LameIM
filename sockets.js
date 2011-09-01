@@ -5,12 +5,11 @@
  * Time: 11:51 PM
  * To change this template use File | Settings | File Templates.
  */
-var connect = require('connect');
-var io = require('socket.io');
-
-var mongoose = require('mongoose');
-var Message = mongoose.model('Message');
-var redis = require("redis"),
+var connect = require('connect'),
+    io = require('socket.io'),
+    mongoose = require('mongoose'),
+    Message = mongoose.model('Message'),
+    redis = require("redis"),
     client = redis.createClient();
 
 var connections = GLOBAL.connections;
