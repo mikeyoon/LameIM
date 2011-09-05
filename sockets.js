@@ -12,11 +12,11 @@ var connect = require('connect'),
     redis = require("redis"),
     client = redis.createClient();
 
-var connections = GLOBAL.connections;
+var connections = { };
 
 exports.boot = function(app, sessionStore)
 {
-    connections = GLOBAL.connections = { };
+    //connections = GLOBAL.connections = { };
 
     client.on("error", function(err) {
         console.log("Redis Error: " + err);

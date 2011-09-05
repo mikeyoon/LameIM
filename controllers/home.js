@@ -11,9 +11,10 @@ var Message = mongoose.model('Message');
 
 module.exports = {
     index: function (req, res) {
-        var results = Message.find({ $or: [ { from: req.session.user.username }, { to: req.session.user.username } ] }).sort({ createDate: 1 }).limit(10);
+        var results = Message.find({ $or: [ { from: req.session.user.username }, { to: req.session.user.username } ] }).sort({ createDate: 0 }).limit(10);
 
         results.exec(function(err, data) {
+            console.log(data);
             data = data ? data : [ ];
             req.session.recent = data.reverse();
             var buddyList = req.session.user.buddies ? req.session.user.buddies : [ ];
@@ -78,7 +79,7 @@ module.exports = {
     },
 
     getRecentHistory: function(req, res) {
-        var recent = Message.find({ $or: [ { from: req.params.id }, { to: req.params.id } ] }).sort('createDate', 1).limit(10);
+        var recent = Message.find({ $or: [ { from: req.params.id }, { to: req.params.id } ] }).sort('createDate', -1).limit(10);
 
         recent.exec(function(err, data) {
             res.send(data.reverse());
