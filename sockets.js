@@ -119,5 +119,5 @@ exports.boot = function(app, sessionStore)
 exports.isOnline = function(name)
 {
     console.log('Connection to ' + name + '=' + connections[name]);
-    return connections[name] != null && typeof connections[name] == "object";
+    return connections[name] !== null && typeof connections[name] === "object";
 };

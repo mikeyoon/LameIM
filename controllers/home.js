@@ -14,8 +14,8 @@ module.exports = {
         var results = Message.find({ $or: [ { from: req.session.user.username }, { to: req.session.user.username } ] }).sort({ createDate: 1 }).limit(10);
 
         results.exec(function(err, data) {
-            req.session.recent = data;
             data = data ? data : [ ];
+            req.session.recent = data.reverse();
             var buddyList = req.session.user.buddies ? req.session.user.buddies : [ ];
             var online = [ ];
             var offline = [ ];

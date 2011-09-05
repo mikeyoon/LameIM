@@ -1,66 +1,7 @@
+script(type="text/javascript", src="/scripts/im.js")
 script(type="text/javascript")
     $(document).ready(function() {
-        var socket = io.connect('');
-
-        socket.on('chat', function(data) {
-            $("#chatwindow").append('<strong>' + data.from + "</strong>: " + data.message + '<br />');
-        });
-
-        socket.on('buddy-disconnect', function(data) {
-            $('#buddy_' + data.username).remove().appendTo($('.offline'));
-        });
-
-        socket.on('buddy-connect', function(data) {
-            $('#buddy_' + data.username).remove().appendTo($('.online'));
-        });
-
-        socket.on('buddy-away', function(data) {
-
-        });
-
-        socket.on('buddy-return', function(data) {
-
-        });
-
-        $('#button-send').click(function () {
-            $("#chatwindow").append('<strong>#{username}</strong>: ' + $('#message-box').val() + '<br />');
-            socket.emit('message', { to: $('.buddylist .selected').html(), message: $('#message-box').val() });
-            $('#message-box').val('');
-        });
-
-        $('#select-buddy').change(function() {
-            $.getJSON('/home/getRecentHistory/' + $(this).val(), function(data) {
-                $('#chatwindow').html('');
-                data.forEach(function(obj) {
-                    $('#chatwindow').append('<strong>' + obj.from + ':</strong> ' + obj.message + '<br />');
-                });
-            });
-        });
-
-        $('#button-add-buddy').click(function() {
-            var buddy = $('#new-buddy').val();
-
-            $.post('/home/addBuddy/' + buddy, function(data) {
-                if (data.success == true)
-                {
-                    $('#select-buddy').append('<option>' + buddy + '</option>')
-                }
-            });
-        });
-
-        $('.list div').live('click', function() {
-            $('.list div').removeClass('selected');
-            $(this).addClass('selected');
-        });
-
-        $('.list div').live('dblclick', function() {
-            $.getJSON('/home/getRecentHistory/' + $(this).html(), function(data) {
-                $('#chatwindow').html('');
-                data.forEach(function(obj) {
-                    $('#chatwindow').append('<strong>' + obj.from + ':</strong> ' + obj.message + '<br />');
-                });
-            });
-        });
+        setupSockets('#{username}');
     });
 
 p(id='chatwindow')

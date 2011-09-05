@@ -19,6 +19,7 @@ function bootApplication(app) {
         app.set('view engine', 'jade');
         app.use(express.bodyParser());
         app.use('/styles', express.static(__dirname + '/styles'));
+        app.use('/scripts', express.static(__dirname + '/scripts'));
     });
 
     // Some dynamic view helpers
