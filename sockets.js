@@ -12,11 +12,13 @@ var connect = require('connect'),
     redis = require("redis"),
     client = redis.createClient();
 
-var connections = { };
+var connections = null;
 
-exports.boot = function(app, sessionStore)
+module.exports.boot = function(app, sessionStore)
 {
     //connections = GLOBAL.connections = { };
+
+    app.socketConnections = connections = { };
 
     client.on("error", function(err) {
         console.log("Redis Error: " + err);
@@ -116,7 +118,7 @@ exports.boot = function(app, sessionStore)
     });
 };
 
-exports.isOnline = function(name)
+module.exports.isOnline = function(name)
 {
     console.log('Connection to ' + name + '=' + connections[name]);
     return connections[name] !== null && typeof connections[name] === "object";
