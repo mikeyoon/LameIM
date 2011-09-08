@@ -14,7 +14,7 @@ var app = express.createServer(
     express.session({secret: 'keyboard cat', key: 'express.sid', store: sessionStore })
 );
 
-require('./repository').boot('mongodb://localhost/db');
+require('./repository').boot('mongodb://heroku_app946851:o7vglb4rusreijos4o0od5il18@dbh43.mongolab.com:27437/heroku_app946851');
 require('./mvc').boot(app);
 require('./sockets').boot(app, sessionStore);
 
