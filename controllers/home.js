@@ -8,6 +8,7 @@ var mongoose = require('mongoose');
 var sockets = require('../sockets');
 
 var Message = mongoose.model('Message');
+var User = mongoose.model('User');
 
 module.exports = {
     index: function (req, res) {

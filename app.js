@@ -5,8 +5,11 @@
 
 var express = require('express'),
     jade = require('jade'),
-    RedisStore = require('connect-redis')(express),
-    sessionStore = new RedisStore({ port: 9530, host: 'icefish.redistogo.com', pass: 'ad5b9ca74f6d1987843d99779cf55418'});
+//    RedisStore = require('connect-redis')(express),
+//    sessionStore = new RedisStore({ port: 9530, host: 'icefish.redistogo.com', pass: 'ad5b9ca74f6d1987843d99779cf55418'});
+    MemoryStore = require('connect/lib/middleware/session/memory');
+
+var sessionStore = new MemoryStore();
 
 var app = express.createServer(
     //express.logger(),
