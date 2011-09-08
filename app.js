@@ -18,6 +18,6 @@ require('./repository').boot('mongodb://heroku_app946851:o7vglb4rusreijos4o0od5i
 require('./mvc').boot(app);
 require('./sockets').boot(app, sessionStore);
 
-app.listen(3000);
+app.listen(36097);
 
 console.log('Express app started on port 3000');
