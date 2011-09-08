@@ -41,7 +41,7 @@ module.exports = {
         });
 
         newUser.save(function(err) {
-            req.session.user = data;
+            req.session.user = newUser;
             res.redirect('/home/index');
         });
     }
