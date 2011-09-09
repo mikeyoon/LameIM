@@ -70,7 +70,7 @@ module.exports.boot = function(app, sessionStore)
                 console.log('listening for user: ' + currentUser);
                 socket.on('message', function(data) {
                     console.log('received message from: ' + currentUser);
-                    console.log('data: ' + data);
+                    console.log('to: ' + data.to + ", message: " + data.message);
 
                     if (connections[data.to])
                     {
