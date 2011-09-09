@@ -8,9 +8,7 @@
 var connect = require('connect'),
     io = require('socket.io'),
     mongoose = require('mongoose'),
-    Message = mongoose.model('Message'),
-    redis = require("redis"),
-    client = redis.createClient();
+    Message = mongoose.model('Message');
 
 var connections = null;
 
@@ -20,7 +18,7 @@ module.exports.boot = function(app, sessionStore)
 
     app.socketConnections = connections = { };
 
-    client.on("error", function(err) {
+    sessionStore.client.on("error", function(err) {
         console.log("Redis Error: " + err);
     });
 
@@ -55,7 +53,7 @@ module.exports.boot = function(app, sessionStore)
                 connections[self.currentUser] = socket;
                 //for each buddy in list, push my name into their key
                 //for each user in my key, send them a login notification
-                var multi = client.multi();
+                var multi = sessionStore.client.multi();
 
                 session.user.buddies.forEach(function(buddy) {
                     multi.hset("watch " + buddy, self.currentUser, 1);
@@ -65,7 +63,7 @@ module.exports.boot = function(app, sessionStore)
                     console.log("Update buddy watch lists " + replies.length);
                 });
 
-                client.hkeys("watch " + self.currentUser, function(err, reply) {
+                sessionStore.client.hkeys("watch " + self.currentUser, function(err, reply) {
                     reply.forEach(function(buddy) {
                         if (connections[buddy])
                             connections[buddy].emit('buddy-connect', { username: currentUser });
@@ -106,7 +104,7 @@ module.exports.boot = function(app, sessionStore)
                         console.log("Update buddy unwatch lists " + replies.length);
                     });
 
-                    client.hkeys("watch " + self.currentUser, function(err, reply) {
+                    sessionStore.client.hkeys("watch " + self.currentUser, function(err, reply) {
                         reply.forEach(function(buddy) {
                             if (connections[buddy])
                                 connections[buddy].emit('buddy-disconnect', { username: self.currentUser });
