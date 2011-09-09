@@ -22,6 +22,9 @@ module.exports.boot = function(app, sessionStore)
 
     var sio = io.listen(app);
 
+    sio.set('transports', ["xhr-polling"]);
+    sio.set("polling duration", 10);
+
     sio.set('log level', 2);
 
     sio.set('authorization', function(data, accept) {
