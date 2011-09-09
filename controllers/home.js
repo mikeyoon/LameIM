@@ -83,6 +83,7 @@ module.exports = {
         var recent = Message.find({ $or: [ { from: req.params.id }, { to: req.params.id } ] }).sort('createDate', -1).limit(10);
 
         recent.exec(function(err, data) {
+            console.log(data);
             res.send(data.reverse());
         });
     }

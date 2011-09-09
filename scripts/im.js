@@ -34,7 +34,7 @@ function setupSockets(username) {
         $.getJSON('/home/getRecentHistory/' + $(this).val(), function(data) {
             $('#chatwindow').html('');
             data.forEach(function(obj) {
-                $('#chatwindow').append('<strong>' + obj.from + ':</strong> ' + obj.message + '<br />');
+                $('#chatwindow').append('<strong>' + obj.user + ':</strong> ' + obj.message + '<br />');
             });
         });
     });
@@ -67,7 +67,7 @@ function setupSockets(username) {
         $.getJSON('/home/getRecentHistory/' + $(this).html(), function(data) {
             $('#chatwindow').html('');
             data.forEach(function(obj) {
-                $('#chatwindow').append('<strong>' + obj.from + ':</strong> ' + obj.message + '<br />');
+                $('#chatwindow').append('<strong>' + obj.user + ':</strong> ' + obj.message + '<br />');
             });
         });
     });

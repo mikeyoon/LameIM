@@ -10,13 +10,11 @@ var connect = require('connect'),
     mongoose = require('mongoose'),
     Message = mongoose.model('Message');
 
-var connections = null;
+var connections = { };
 
 module.exports.boot = function(app, sessionStore)
 {
     //connections = GLOBAL.connections = { };
-
-    app.socketConnections = connections = { };
 
     sessionStore.client.on("error", function(err) {
         console.log("Redis Error: " + err);
@@ -47,45 +45,44 @@ module.exports.boot = function(app, sessionStore)
             {
                 console.log('Connecting user ' + session.user.username);
 
-                var self = this;
-                self.currentUser = session.user.username;
+                var currentUser = session.user.username;
 
-                connections[self.currentUser] = socket;
+                connections[currentUser] = socket;
                 //for each buddy in list, push my name into their key
                 //for each user in my key, send them a login notification
                 var multi = sessionStore.client.multi();
 
                 session.user.buddies.forEach(function(buddy) {
-                    multi.hset("watch " + buddy, self.currentUser, 1);
+                    multi.hset("watch " + buddy, currentUser, 1);
                 });
 
                 multi.exec(function(err, replies) {
                     console.log("Update buddy watch lists " + replies.length);
                 });
 
-                sessionStore.client.hkeys("watch " + self.currentUser, function(err, reply) {
+                sessionStore.client.hkeys("watch " + currentUser, function(err, reply) {
                     reply.forEach(function(buddy) {
                         if (connections[buddy])
                             connections[buddy].emit('buddy-connect', { username: currentUser });
                     });
                 });
 
-                console.log('listening for user: ' + self.currentUser);
+                console.log('listening for user: ' + currentUser);
                 socket.on('message', function(data) {
-                    console.log('received message from: ' + self.currentUser);
+                    console.log('received message from: ' + currentUser);
                     console.log('data: ' + data);
 
                     if (connections[data.to])
                     {
                         var newMessage = new Message({
-                            user: self.currentUser,
+                            user: currentUser,
                             to: data.to,
                             message: data.message,
                             createDate: new Date()
                         });
 
                         newMessage.save(function(err) {
-                            connections[data.to].emit('chat', { from: self.currentUser, message: data.message });
+                            connections[data.to].emit('chat', { from: currentUser, message: data.message });
                         });
                     }
                     else
@@ -93,21 +90,21 @@ module.exports.boot = function(app, sessionStore)
                 });
 
                 socket.on('disconnect', function() {
-                    console.log(self.currentUser + ' socket disconnect');
-                    connections[self.currentUser] = null;
+                    console.log(currentUser + ' socket disconnect');
+                    connections[currentUser] = null;
 
                     session.user.buddies.forEach(function(buddy) {
-                        multi.hdel("watch " + buddy, self.currentUser);
+                        multi.hdel("watch " + buddy, currentUser);
                     });
 
                     multi.exec(function(err, replies) {
                         console.log("Update buddy unwatch lists " + replies.length);
                     });
 
-                    sessionStore.client.hkeys("watch " + self.currentUser, function(err, reply) {
+                    sessionStore.client.hkeys("watch " + currentUser, function(err, reply) {
                         reply.forEach(function(buddy) {
                             if (connections[buddy])
-                                connections[buddy].emit('buddy-disconnect', { username: self.currentUser });
+                                connections[buddy].emit('buddy-disconnect', { username: currentUser });
                         });
                     });
                 });
