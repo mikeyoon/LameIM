@@ -80,7 +80,16 @@ module.exports = {
     },
 
     getRecentHistory: function(req, res) {
-        var recent = Message.find({ $or: [ { user: req.params.id }, { to: req.params.id } ] }).sort('createDate', -1).limit(10);
+
+        var currentUser = req.session.user.username;
+        var recent = Message
+//            where('user', req.params.id)
+//            .or('to', currentUser)
+//            .where('user', currentUser)
+//            .or('to', req.params.id).sort('createDate', -1).limit(10);
+            .find({ $or: [
+            { user: req.params.id, to: currentUser },
+            { to: req.params.id, user: currentUser } ] }).sort('createDate', -1).limit(10);
 
         recent.exec(function(err, data) {
             res.send(data.reverse());
