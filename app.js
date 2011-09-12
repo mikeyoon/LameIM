@@ -3,10 +3,16 @@
  * and open the template in the editor.
  */
 
+var url = require('url');
+
+var redisUrl = url.parse(process.env.REDISTOGO_URL || 'redis://localhost:6379');
+var mongoUrl = process.env.MONGOLAB_URI || 'mongodb://localhost/db';
+var redisAuth = process.env.REDISTOGO_URL ? redisUrl.auth.split(':')[1] : "";
+
 var express = require('express'),
     jade = require('jade'),
     RedisStore = require('connect-redis')(express),
-    sessionStore = new RedisStore({ port: 9530, host: 'icefish.redistogo.com', pass: 'ad5b9ca74f6d1987843d99779cf55418'});
+    sessionStore = new RedisStore({ port: redisUrl.port, host: redisUrl.hostname, pass: redisAuth});
 //    MemoryStore = require('connect/lib/middleware/session/memory');
 
 var app = express.createServer(
@@ -15,7 +21,7 @@ var app = express.createServer(
     express.session({secret: 'keyboard cat', key: 'express.sid', store: sessionStore })
 );
 
-require('./repository').boot('mongodb://heroku_app946851:o7vglb4rusreijos4o0od5il18@dbh43.mongolab.com:27437/heroku_app946851');
+require('./repository').boot(mongoUrl);
 require('./mvc').boot(app);
 require('./sockets').boot(app, sessionStore);
 

@@ -2,8 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-//var Message = require('../models/user').Messages;
-//var User = require('../models/user').User;
+
 var mongoose = require('mongoose');
 var sockets = require('../sockets');
 
@@ -83,15 +82,12 @@ module.exports = {
 
         var currentUser = req.session.user.username;
         var recent = Message
-//            where('user', req.params.id)
-//            .or('to', currentUser)
-//            .where('user', currentUser)
-//            .or('to', req.params.id).sort('createDate', -1).limit(10);
             .find({ $or: [
             { user: req.params.id, to: currentUser },
             { to: req.params.id, user: currentUser } ] }).sort('createDate', -1).limit(10);
 
         recent.exec(function(err, data) {
+            1351
             res.send(data.reverse());
         });
     }
